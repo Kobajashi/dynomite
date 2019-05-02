@@ -271,6 +271,7 @@ static bool redis_argn(struct msg *r) {
     case MSG_REQ_REDIS_JSONARRLEN:
     case MSG_REQ_REDIS_JSONOBJKEYS:
     case MSG_REQ_REDIS_JSONOBJLEN:
+    case MSG_REQ_REDIS_SELECT:
       return true;
 
     default:
@@ -1021,6 +1022,12 @@ void redis_parse_req(struct msg *r, const struct string *hash_tag) {
             if (str6icmp(m, 'a', 'p', 'p', 'e', 'n', 'd')) {
               r->type = MSG_REQ_REDIS_APPEND;
               r->is_read = 0;
+              break;
+            }
+
+            if (str6icmp(m, 's', 'e', 'l', 'e', 'c', 't')) {
+              r->type = MSG_REQ_REDIS_SELECT;
+              r->is_read = 1;
               break;
             }
 
